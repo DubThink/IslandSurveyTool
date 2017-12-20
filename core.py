@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import random_org
 import random
 
-ssid="PHPSESSID="
+ssid="PHPSESSID=jpg0d1497bvgcvodvu4vdotv73"
 header={
 "Host":"islands.smp.uq.edu.au",
 "Connection":"keep-alive",
@@ -122,7 +122,7 @@ def getConsent(personid):
 
 # Returns
 # TODO automate house count
-def surveyRandoms(count, houseCount, village=18):
+def surveyRandoms(count, houseCount, village=18,min_age=0,max_age=300):
     idsSurveyed = []
     numberSurveyed = 0
     seed = random_org.org_randint(-(1 << 16), 1 << 16, 1)[0]
@@ -135,6 +135,8 @@ def surveyRandoms(count, houseCount, village=18):
         members = getHouseMembers(housenum, village)
         random.shuffle(members)
         for member in members:
+            if int(member[2])<min_age or int(member[2])>max_age:
+                continue
             consent=getConsent(member[3])
             #print("Next person ",member[0],member[3],consent)
 
@@ -169,14 +171,15 @@ then collect survey data
 surveyData2=[[35, 14, 677], [22, 7, 490], [39, 11, 806], [14, 10, 323], [57, 6, 1182], [35, 13, 711], [63, 8, 1250], [27, 12, 567], [42, 9, 926], [35, 3, 705], [57, 5, 1161], [47, 0, 1021], [40, 4, 810], [34, 1, 708], [30, 2, 652], [32, 25, 656], [25, 20, 506], [67, 18, 1464], [72, 21, 1514], [37, 23, 782], [9, 17, 222], [38, 24, 778], [34, 15, 722], [22, 16, 433], [20, 22, 437], [28, 26, 564], [39, 19, 800]]
 surveyData=[[3, 14, 677], [2, 7, 490], [4, 11, 806], [1, 10, 323], [6, 6, 1182], [4, 13, 711], [6, 8, 1250], [3, 12, 567], [4, 9, 926], [4, 3, 705], [6, 5, 1161], [5, 0, 1021], [4, 4, 810], [3, 1, 708], [3, 2, 652], [3, 25, 656], [2, 20, 506], [7, 18, 1464], [7, 21, 1514], [4, 23, 782], [1, 17, 222], [4, 24, 778], [3, 15, 722], [2, 16, 433], [2, 22, 437], [3, 26, 564], [4, 19, 800]]
 
+#sdat=[[a*3,b,c] for a,b,c in surveyData]
+
 # Generated from project 1
 RAND_IDS=['h5wwsdnvfm', 'lj8rs7xxha', 'd6t6bpejmj', 'fcnf546bbj', 'ghtsy734qh', '5yhkvmqp5q', 'gwkcjm9u2v', 'v37kbqjfyx', 'zn9f8aay3r', 'crmdsbxb96', 'eqygq27cw3', '5uvdrdmccs', 'hrslx6p23j', '6derjnyjkv', 'abbgteb329', 'jlzcx6495f', 'xwcplfz6eg', '9ajdhavctq', 'xs6d6e5ray', '5kj82pt5wj', 'vnbkh8vnxs', 'en3rvzyx5v', 'xpcw2kekcx', '2xm5p6pfz4', 'kzlf6e5rj5', 'x6ubrxvnxd', 'kdbllggrlk', 'mel5nah8dg', 'hntdfzyab2', 'th7ad29rj4', 'enunhcguc9', 'zhh2fvsbyg', '4paypqby3x', 'xfsb3j333y', 'p5kja2br8j', 'j9t7dfyk92', '2yvpdsajjf', 'mgsyw4wx56', 'xkg2pfvmzg', 'bdg9dbfxsm', 'rua6gbfg3a', 'p543rm6ds7', 'rtla3u94hm', 'kgq4thqsdd', 'g3v9sml4qs', 'ck2n9953nl', 'dtuyvzkr3y', 'rafu96nsbe', '4v7fdva3cc', '75bn42seq8', 'rv4nydnxqq', 'p47e2ma7br', '7m6h5y3e5a', 'lflxp6z4se', 's4xt3a5uag', 'k8llzzrvx9', 'nlllqrkx3b', 'wadsjzpp6q', 'nq8afgnaxg', 'zmzuhnnvje', 'fyvr7c434h', 'e9d8eqgf2d', 'vtzc96zf74', 'gbprcxkvl8', 'bpzdr6hdw8', 'pdcwklc3fb', 'bu8a4y4egt', 'wv3qjymbap', '9mapdtr4zp', 'f289lrjvxy', 'q4sz46hnsm', 'e8lwq6u2sw', '7kkgfz2uzw', 'abu9c6zyfq', 'sp28khhlmw', 'd42zzfmm9s', '3xdzkkvg88', 'stjrk6kub2', 'etlkv7xgjr', 'pfdaj8ljac', 'kcxfc3g7ps', '9yvzcphl7s', 'we5ta72u8w', 'khgsrseqze', '34sc9knrpf', 'vd2x97spn6', 't6j7e6mbzy', 'jkuhkrrg6q', 'yg97n5dxjc', 'fkzulfnhj5', 't6tzrtzc5n', 'm384kefj5g', 'ync4znwnxy', 'tjhdkbk392', 'vrf9clqnlx', '4lmgcms2za', 'f66ddeyqk8', 'ez5swl2jyp', 'bgm3he8e6f']
 
-def runStudy():
-    villdat={}
-    for vill in surveyData:
+def runStudy(villdat,dataset=surveyData):
+    for vill in dataset:
         print("Surveying ",vill[1])
-        villdat[vill[1]]=surveyRandoms(vill[0],vill[2],vill[1])
+        villdat[vill[1]]=surveyRandoms(vill[0],vill[2],vill[1],18)
     repr(villdat)
     for i in range(27):
         print("Friending ",i)
@@ -200,16 +203,20 @@ def runStudy2(villdat,samples=surveyData):
         print("Collecting ", vill[1])
         dat = villdat[vill[1]]
         villdat[vill[1]]=collectData(dat)
-    print("villdat 1",villdat[1])
+    # print("villdat 1",villdat[1])
     for vill in samples:
         print("Experimenting ",vill[1])
         dat=villdat[vill[1]]
         for person in dat:
-            runTask(person,"energydrink")
+            print("  Experimenting",person[0],"",person[3])
+            runTask(person[3],"energydrink")
     # print("villdat:",villdat)
     for vill in samples:
         print("Surveying ",vill[1])
-        surveyRandoms(vill[0],vill[2],vill[1])
+        dat = villdat[vill[1]]
+        for person in dat:
+            print("  Surveying",person[0],"",person[3])
+            runSurvey(person[3])
     # print("villdat:",villdat)
     for vill in samples:
         print("Collecting ", vill[1])

@@ -21,6 +21,6 @@ def org_randint(min,max,ct):
     j=json.loads(requests.post("https://api.random.org/json-rpc/1/invoke",json=data).content.decode("utf-8"))
     return j["result"]["random"]["data"]
 
-if __name__ == "__main__":
-    print(org_randint(6))
+# if __name__ == "__main__":
+#     print(org_randint(6))
 
